@@ -67,7 +67,7 @@ jobs:
         run: |
           TIMESTAMP=$(echo ${{ steps.timestamp.outputs.timestamp }})
           DOCKERRUN_FILE="$TIMESTAMP-github-action-Dockerrun.aws.json"
-          aws s3 cp $DOCKERRUN_FILE s3://elasticbeanstalk-ap-southeast-1-265361850793/$DOCKERRUN_FILE
+          aws s3 cp $DOCKERRUN_FILE s3://$S3_BUCKET/$DOCKERRUN_FILE
 
       - name: Create Elastic Beanstalk application version
         run: |
