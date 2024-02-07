@@ -37,4 +37,12 @@ export class ConfigSchema {
   @IsNotEmpty()
   @IsString()
   DB_DATABASE: string
+
+  /*
+   * Auth Env Vars.
+   */
+  @Type(() => String)
+  @IsNotEmpty()
+  @IsString()
+  AUTH_SECRET: string
 }

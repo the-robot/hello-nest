@@ -1,8 +1,8 @@
 {
-  "name": "nest-typescript-starter",
+  "name": "hello-nest",
   "private": true,
   "version": "1.0.0",
-  "description": "Nest TypeScript starter repository",
+  "description": "Simple hello world server with MongoDB backend",
   "license": "MIT",
   "scripts": {
     "build": "nest build",
