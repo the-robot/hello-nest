@@ -1,0 +1,85 @@
+name: CD - release version
+
+on:
+  release:
+    types:
+      - created
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    env:
+      AWS_REGION: ap-southeast-1
+      ECR_REGION: ap-southeast-1
+      ECR_NAME: ${{ secrets.ECR_NAME }}
+      ECR_URI: ${{ secrets.ECR_URI }}
+      EB_APPLICATION: ${{ secrets.EB_APP }}
+      EB_CONTAINER_NAME: hellonest
+      S3_BUCKET: ${{ secrets.S3_BUCKET }}
+      # https://notestoself.dev/posts/github-action-s3-botocore-awsrequest-process-255-error/
+      AWS_EC2_METADATA_DISABLED: true
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Configure AWS credentials
+        run: |
+          echo ${{ secrets.AWS_ACCESS_KEY_ID }} > aws_access_key
+          echo ${{ secrets.AWS_SECRET_ACCESS_KEY }} > aws_secret_key
+          aws configure set aws_access_key_id $(cat aws_access_key)
+          aws configure set aws_secret_access_key $(cat aws_secret_key)
+          aws configure set region $AWS_REGION
+
+      - name: Build and push Docker image to ECR
+        run: |
+          # Get the release version name
+          VERSION=$(basename $GITHUB_REF | sed 's/refs\/tags\///')
+
+          # Build the Docker image
+          docker build -f nest.Dockerfile -t $ECR_NAME:$VERSION .
+
+          # Authenticate with AWS ECR
+          aws ecr get-login-password --region $ECR_REGION | docker login --username AWS --password-stdin $ECR_URI
+
+          # Tag and push the Docker image to ECR
+          docker tag $ECR_NAME:$VERSION $ECR_URI:$VERSION
+          docker push $ECR_URI:$VERSION
+
+      - name: Generate timestamp
+        id: timestamp
+        run: echo "::set-output name=timestamp::$(date +%s)"
+
+      - name: Create Elastic Beanstalk Dockerrun file
+        run: |
+          # Get the release version name
+          VERSION=$(basename $GITHUB_REF | sed 's/refs\/tags\///')
+
+          # Create a new filename with a timestamp
+          TIMESTAMP=$(echo ${{ steps.timestamp.outputs.timestamp }})
+          DOCKERRUN_FILE="$TIMESTAMP-github-action-Dockerrun.aws.json"
+
+          DOCKERRUN_JSON="{\"AWSEBDockerrunVersion\": 2, \"containerDefinitions\": [{\"name\": \"$EB_CONTAINER_NAME\", \"image\": \"$ECR_URI:$VERSION\", \"memory\": 512, \"essential\": true, \"portMappings\": [{\"containerPort\": 3000, \"hostPort\": 80}]}]}"
+          echo $DOCKERRUN_JSON > $DOCKERRUN_FILE
+
+      - name: Upload Dockerrun file to S3
+        run: |
+          TIMESTAMP=$(echo ${{ steps.timestamp.outputs.timestamp }})
+          DOCKERRUN_FILE="$TIMESTAMP-github-action-Dockerrun.aws.json"
+          aws s3 cp $DOCKERRUN_FILE s3://$S3_BUCKET/$DOCKERRUN_FILE
+
+      - name: Create Elastic Beanstalk application version
+        run: |
+          # Get the release version name
+          VERSION=$(basename $GITHUB_REF | sed 's/refs\/tags\///')
+
+          TIMESTAMP=$(echo ${{ steps.timestamp.outputs.timestamp }})
+          DOCKERRUN_FILE="$TIMESTAMP-github-action-Dockerrun.aws.json"
+
+          aws elasticbeanstalk create-application-version \
+            --application-name $EB_APPLICATION \
+            --version-label $VERSION \
+            --source-bundle "S3Bucket=$S3_BUCKET,S3Key=$DOCKERRUN_FILE" \
+            --description "Townhall $VERSION"
+          
+          echo "Please go to AWS console and deploy the version to the Elastic Beanstalk environment"
