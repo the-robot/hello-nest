@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  mongodb:
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: dbadmin
+      MONGO_INITDB_ROOT_PASSWORD: secret
+    build:
+      context: .
+      dockerfile: mongo.Dockerfile
+    ports:
+      - '27017:27017'
+    volumes:
+      - ./.mongo-data:/data/db
