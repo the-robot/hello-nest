@@ -34,7 +34,8 @@ COPY package*.json ./
 #ENV NODE_ENV=production
 
 # Install production dependencies
-RUN npm ci --production
+# RUN npm ci --production
+RUN npm install --only=production
 
 # Copy the built code from the previous stage
 COPY --from=builder /app/dist ./dist
