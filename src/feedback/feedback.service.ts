@@ -51,9 +51,9 @@ export class FeedbackService {
   // Simulate an expensive operation (e.g., CPU-intensive task or delay) with random duration
   private async simulateExpensiveOperation(): Promise<void> {
     // Generate a random delay between 1 and 5 seconds
-    const delayInSeconds = Math.floor(Math.random() * (5 - 1 + 1)) + 1;
-    
+    const delayInSeconds = Math.floor(Math.random() * (5 - 1 + 1)) + 1
+
     // Wait for the randomly generated delay
-    await new Promise((resolve) => setTimeout(resolve, delayInSeconds * 1000));
+    await new Promise((resolve) => setTimeout(resolve, delayInSeconds * 1000))
   }
 }
