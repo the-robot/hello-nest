@@ -5,21 +5,55 @@ import { check, sleep } from 'k6'
 const secret = __ENV.AUTH_SECRET || process.env.AUTH_SECRET || 'default_secret'
 const api = __ENV.API || process.env.API || 'http://localhost:3000'
 
-// stress test
+// stress test (normal load)
 export const options = {
   stages: [
-    { duration: '30s', target: 20 },
-    { duration: '3m', target: 20 },
-    { duration: '30s', target: 0 },
+    { duration: '5s', target: 20 },
+    { duration: '1m', target: 20 },
+    { duration: '5s', target: 0 },
+    { duration: '20s', target: 0 },
   ],
+  thresholds: {
+    http_req_failed: ['rate<0.05'], // http errors should be less than 5%
+    http_req_duration: ['p(95)<10000'], // 99% of requests should be below 10s
+  },
 }
+
+// stress test (50% higher load)
+// export const options = {
+//   stages: [
+//     { duration: '5s', target: 30 },
+//     { duration: '1m', target: 30 },
+//     { duration: '5s', target: 0 },
+//     { duration: '20s', target: 0 },
+//   ],
+//   thresholds: {
+//     http_req_failed: ['rate<0.05'], // http errors should be less than 5%
+//     http_req_duration: ['p(95)<10000'], // 99% of requests should be below 10s
+//   },
+// }
+
+// stress test (much higher load)
+// export const options = {
+//   stages: [
+//     { duration: '5s', target: 60 },
+//     { duration: '1m', target: 60 },
+//     { duration: '5s', target: 0 },
+//     { duration: '20s', target: 0 },
+//   ],
+//   thresholds: {
+//     http_req_failed: ['rate<0.05'], // http errors should be less than 5%
+//     http_req_duration: ['p(95)<10000'], // 99% of requests should be below 10s
+//   },
+// }
 
 // spike test
 // export const options = {
 //   stages: [
-//     { duration: '5s', target: 2000 },
-//     { duration: '3m', target: 2000 },
-//     { duration: '30s', target: 0 },
+//     { duration: '5s', target: 240 },
+//     { duration: '1m', target: 240 },
+//     { duration: '5s', target: 0 },
+//     { duration: '20s', target: 0 },
 //   ],
 // }
 
