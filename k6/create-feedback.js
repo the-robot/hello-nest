@@ -17,8 +17,8 @@ const api = __ENV.API || process.env.API || 'http://localhost:3000'
 // spike test
 export const options = {
   stages: [
-    { duration: '30s', target: 1500 },
-    { duration: '3m', target: 1500 },
+    { duration: '5s', target: 2000 },
+    { duration: '3m', target: 2000 },
     { duration: '30s', target: 0 },
   ],
 };

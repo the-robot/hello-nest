@@ -17,6 +17,8 @@ export class FeedbackService {
     message,
     contactEmail,
   }: CreateFeedbackDto): Promise<void> {
+    await this.simulateExpensiveOperation()
+
     const feedback = new this.feedbackModel({
       title: title.trim(),
       message: message.trim(),
@@ -44,5 +46,14 @@ export class FeedbackService {
 
   async deleteFeedbacks(): Promise<void> {
     await this.feedbackModel.deleteMany({})
+  }
+
+  // Simulate an expensive operation (e.g., CPU-intensive task or delay) with random duration
+  private async simulateExpensiveOperation(): Promise<void> {
+    // Generate a random delay between 1 and 5 seconds
+    const delayInSeconds = Math.floor(Math.random() * (5 - 1 + 1)) + 1;
+    
+    // Wait for the randomly generated delay
+    await new Promise((resolve) => setTimeout(resolve, delayInSeconds * 1000));
   }
 }
