@@ -5,10 +5,13 @@ import { check, sleep } from 'k6'
 const secret = __ENV.AUTH_SECRET || process.env.AUTH_SECRET || 'default_secret'
 const api = __ENV.API || process.env.API || 'http://localhost:3000'
 
-export let options = {
-  vus: 10, // virtual users
-  duration: '30s',
-}
+export const options = {
+  stages: [
+    { duration: '30s', target: 75 },
+    { duration: '3m', target: 75 },
+    { duration: '30s', target: 0 },
+  ],
+};
 
 export default function () {
   // Generate random data
@@ -33,7 +36,7 @@ export default function () {
 
   // Check if request was successful
   check(res, {
-    'status is 200': (r) => r.status === 200,
+    'status is 201': (r) => r.status === 201,
   })
 
   sleep(1)
