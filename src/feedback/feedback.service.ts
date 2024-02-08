@@ -50,10 +50,23 @@ export class FeedbackService {
 
   // Simulate an expensive operation (e.g., CPU-intensive task or delay) with random duration
   private async simulateExpensiveOperation(): Promise<void> {
-    // Generate a random delay between 1 and 5 seconds
-    const delayInSeconds = Math.floor(Math.random() * (5 - 1 + 1)) + 1
+    // Define the duration of the CPU-bound operation in milliseconds (e.g., 5 seconds)
+    const durationInMilliseconds = 5000 // 5 seconds
 
-    // Wait for the randomly generated delay
-    await new Promise((resolve) => setTimeout(resolve, delayInSeconds * 1000))
+    // Get the current timestamp to track the start time of the operation
+    const startTime = Date.now()
+
+    // Perform CPU-bound computations in a loop for the specified duration
+    while (Date.now() - startTime < durationInMilliseconds) {
+      // Example CPU-bound computation: Calculate Fibonacci sequence
+      let a = 0,
+        b = 1,
+        temp
+      for (let i = 0; i < 100000; i++) {
+        temp = a
+        a = b
+        b = temp + b
+      }
+    }
   }
 }

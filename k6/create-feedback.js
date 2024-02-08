@@ -6,22 +6,22 @@ const secret = __ENV.AUTH_SECRET || process.env.AUTH_SECRET || 'default_secret'
 const api = __ENV.API || process.env.API || 'http://localhost:3000'
 
 // stress test
-// export const options = {
-//   stages: [
-//     { duration: '30s', target: 200 },
-//     { duration: '3m', target: 200 },
-//     { duration: '30s', target: 0 },
-//   ],
-// };
-
-// spike test
 export const options = {
   stages: [
-    { duration: '5s', target: 2000 },
-    { duration: '3m', target: 2000 },
+    { duration: '30s', target: 100 },
+    { duration: '3m', target: 100 },
     { duration: '30s', target: 0 },
   ],
-};
+}
+
+// spike test
+// export const options = {
+//   stages: [
+//     { duration: '5s', target: 2000 },
+//     { duration: '3m', target: 2000 },
+//     { duration: '30s', target: 0 },
+//   ],
+// }
 
 export default function () {
   // Generate random data
