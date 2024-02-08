@@ -5,10 +5,20 @@ import { check, sleep } from 'k6'
 const secret = __ENV.AUTH_SECRET || process.env.AUTH_SECRET || 'default_secret'
 const api = __ENV.API || process.env.API || 'http://localhost:3000'
 
+// stress test
+// export const options = {
+//   stages: [
+//     { duration: '30s', target: 200 },
+//     { duration: '3m', target: 200 },
+//     { duration: '30s', target: 0 },
+//   ],
+// };
+
+// spike test
 export const options = {
   stages: [
-    { duration: '30s', target: 75 },
-    { duration: '3m', target: 75 },
+    { duration: '30s', target: 1500 },
+    { duration: '3m', target: 1500 },
     { duration: '30s', target: 0 },
   ],
 };
