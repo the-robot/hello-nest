@@ -8,8 +8,8 @@ const api = __ENV.API || process.env.API || 'http://localhost:3000'
 // stress test
 export const options = {
   stages: [
-    { duration: '30s', target: 100 },
-    { duration: '3m', target: 100 },
+    { duration: '30s', target: 20 },
+    { duration: '3m', target: 20 },
     { duration: '30s', target: 0 },
   ],
 }

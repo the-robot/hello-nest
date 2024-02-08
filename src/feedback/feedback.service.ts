@@ -1,4 +1,5 @@
 import { BadRequestException, Injectable } from '@nestjs/common'
+import { ConfigService } from '@nestjs/config'
 import { InjectModel } from '@nestjs/mongoose'
 import { Model } from 'mongoose'
 
@@ -10,6 +11,7 @@ export class FeedbackService {
   constructor(
     @InjectModel('Feedback')
     private readonly feedbackModel: Model<FeedbackDocument>,
+    private readonly configService: ConfigService,
   ) {}
 
   async createFeedback({
@@ -51,7 +53,10 @@ export class FeedbackService {
   // Simulate an expensive operation (e.g., CPU-intensive task or delay) with random duration
   private async simulateExpensiveOperation(): Promise<void> {
     // Define the duration of the CPU-bound operation in milliseconds (e.g., 5 seconds)
-    const durationInMilliseconds = 5000 // 5 seconds
+    const durationInMilliseconds =
+      this.configService.get<number>('CPU_DURATION')
+
+    const loopCount = this.configService.get<number>('CPU_LOOP')
 
     // Get the current timestamp to track the start time of the operation
     const startTime = Date.now()
@@ -62,7 +67,7 @@ export class FeedbackService {
       let a = 0,
         b = 1,
         temp
-      for (let i = 0; i < 100000; i++) {
+      for (let i = 0; i < loopCount; i++) {
         temp = a
         a = b
         b = temp + b

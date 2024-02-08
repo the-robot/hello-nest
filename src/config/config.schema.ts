@@ -1,5 +1,5 @@
 import { Type } from 'class-transformer'
-import { IsNotEmpty, IsString } from 'class-validator'
+import { IsNotEmpty, IsNumber, IsString } from 'class-validator'
 
 export class ConfigSchema {
   /*
@@ -45,4 +45,17 @@ export class ConfigSchema {
   @IsNotEmpty()
   @IsString()
   AUTH_SECRET: string
+
+  /*
+   * CPU Env Vars.
+   */
+  @Type(() => Number)
+  @IsNotEmpty()
+  @IsNumber()
+  CPU_DURATION: number
+
+  @Type(() => Number)
+  @IsNotEmpty()
+  @IsNumber()
+  CPU_LOOP: number
 }
