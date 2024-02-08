@@ -54,9 +54,7 @@ export class FeedbackController {
 
   @Delete()
   @HttpCode(HttpStatus.NO_CONTENT)
-  async deleteFeedbacks(
-    @Body() body: { _secret: string },
-  ): Promise<void> {
+  async deleteFeedbacks(@Body() body: { _secret: string }): Promise<void> {
     if (body._secret !== this.authSecret) {
       throw new UnauthorizedException('Unauthorized')
     }
