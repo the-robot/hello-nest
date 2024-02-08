@@ -80,6 +80,6 @@ jobs:
             --application-name $EB_APPLICATION \
             --version-label $VERSION \
             --source-bundle "S3Bucket=$S3_BUCKET,S3Key=$DOCKERRUN_FILE" \
-            --description "Townhall $VERSION"
+            --description "Hello Nest $VERSION"
           
           echo "Please go to AWS console and deploy the version to the Elastic Beanstalk environment"
