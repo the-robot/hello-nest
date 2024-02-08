@@ -22,7 +22,9 @@ export class FeedbackService {
       message: message.trim(),
       contactEmail: contactEmail.trim(),
     })
-    console.log(`Received feedback | title: ${title} | contactEmail: ${contactEmail}`)
+    console.log(
+      `Received feedback | title: ${title} | contactEmail: ${contactEmail}`,
+    )
     await feedback.save()
   }
 
@@ -32,6 +34,11 @@ export class FeedbackService {
     }
     const limit = 25
     const skip = (page - 1) * limit
-    return this.feedbackModel.find().sort({ createdAt: 'desc' }).skip(skip).limit(limit).exec()
+    return this.feedbackModel
+      .find()
+      .sort({ createdAt: 'desc' })
+      .skip(skip)
+      .limit(limit)
+      .exec()
   }
 }

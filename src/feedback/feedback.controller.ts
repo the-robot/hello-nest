@@ -18,7 +18,7 @@ import { ConfigService } from '@nestjs/config'
 export class FeedbackController {
   constructor(
     private readonly feedbackService: FeedbackService,
-    private readonly configService: ConfigService
+    private readonly configService: ConfigService,
   ) {}
 
   @Post()
@@ -41,7 +41,9 @@ export class FeedbackController {
 
   @Get()
   @HttpCode(HttpStatus.OK)
-  async getFeedbacksByPage(@Query() query: { page?: number }): Promise<FeedbackDocument[]> {
+  async getFeedbacksByPage(
+    @Query() query: { page?: number },
+  ): Promise<FeedbackDocument[]> {
     return await this.feedbackService.getFeedbacks(query.page ?? 1)
   }
 }
