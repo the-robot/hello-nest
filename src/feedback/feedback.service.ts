@@ -41,4 +41,8 @@ export class FeedbackService {
       .limit(limit)
       .exec()
   }
+
+  async deleteFeedbacks(): Promise<void> {
+    await this.feedbackModel.deleteMany({})
+  }
 }
